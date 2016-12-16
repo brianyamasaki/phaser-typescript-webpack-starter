@@ -9,11 +9,15 @@ module.exports = {
   // Source maps support ('inline-source-map' also works)
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.ts', '.js']
+    extensions: ['', '.ts', '.js']
   },
   module: {
     loaders: [
-      { test: /\.ts$/, loader: 'ts-loader' }
+      { 
+        test: /\.ts$/, 
+        loader: 'ts-loader',
+        extensions: /node_modules/
+      }
     ],
     preLoaders: [
       {

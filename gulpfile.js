@@ -27,11 +27,29 @@ gulp.task('copy', function() {
         .pipe(gulp.dest(project.build.dir));
 });
 
+gulp.task('tsc', function() {
+    return gulp.src('src/**/*.ts')
+        .pipe(tsProject())
+        .pipe(gulp.dest(project.build.dir));
+});
+
+gulp.task('webpack', function() {
+
+    webpack(Object.create(webpackConfig),
+        function(err,stats) {
+        if(err) throw new gutil.PluginError("webpack", err);
+        gutil.log("[webpack]", stats.toString({
+            // output options
+        }));
+        // callback();
+    });
+});
+
 gulp.task('webpackDevServer', function() {
   	// modify some webpack config options
 	var myConfig = Object.create(webpackConfig);
-	myConfig.devtool = "eval";
-	myConfig.debug = true;
+	// myConfig.devtool = "eval";
+	// myConfig.debug = true;
 
     new WebpackDevServer(webpack(myConfig), {
         publicPath: '/',
@@ -46,4 +64,6 @@ gulp.task('webpackDevServer', function() {
     });
 });
 
-gulp.task('default', ['copy', 'webpackDevServer'])
+gulp.task('default', ['copy', 'tsc', 'webpackDevServer']);
+
+gulp.task('build', ['copy', 'tsc', 'webpack']);
